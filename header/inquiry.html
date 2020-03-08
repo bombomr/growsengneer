@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="../js/script_btn.js"></script>
+    <title>お問い合わせ</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../css/stylesheet.css">
+</head>
+
+<body>
+    <div id="header_redbar" data-referrer="header_redbar">
+        <div id="redBar">
+            <div class="_Test6">
+                <div class="_Test10">
+                    <div class="_Test5">
+                        <h1>
+                            タイトル
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form action="confirm.php" method="post" name="Form1">
+        <div class="form-group">
+            <label>お名前　<span class="label label-danger">必須</span></label>
+            <input type="text" class="form-control" placeholder="お名前を入力してください" name="name" required>
+            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+            <div class="help-block with-errors"></div>
+        </div>
+        <div class="form-group">
+            <label>メールアドレス　<span class="label label-danger">必須</span></label>
+            <input type="email" class="form-control" placeholder="xxxxxx@yahoo.co.jp" name="email" required>
+            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+            <div class="help-block with-errors"></div>
+        </div>
+        <div class="form-group">
+            <div class="form-group">
+            <label>電話番号</label>
+                <input type="text" class="form-control" placeholder="xxx-yyyy-zzzz" name="phone">
+            </div>
+            <label>件名</label><br>
+            <label class="radio-inline">
+                <input type="radio" name="subjectR" value="checkboxA" onClick="changeDisabled()"> 〇〇のご依頼について
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="subjectR" value="checkboxA" onClick="changeDisabled()"> 〇〇のご依頼について
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="subjectR" value="others" onClick="changeDisabled()"> その他(下記の件名にご記入ください)
+            </label>
+            <div class="form-group" style="margin-top:10px;">
+                <input type="text" class="form-control" placeholder="〇〇について" name="subject" onClick="changeDisabled()">
+            </div>
+            <div class="form-group">
+                <label>お問い合わせ内容　<span class="label label-danger">必須</span></label>
+                <textarea placeholder="お問い合わせ内容" rows="10" class="form-control" name="main" required></textarea>
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                <div class="help-block with-errors"></div>
+            </div>
+                <button type="submit" class="btn btn-warning btn-lg btn-block">送信</button>
+                <input type="button" value="戻る" onClick="history.back()">
+    </form>
+</body>
+<!-- 件名その他を押したときだけテキストボックスをONにする -->
+<script type="text/javascript">
+    function changeDisabled() {
+        if ( document.Form1["subjectR"][2].checked ) {
+            document.Form1["subject"].disabled = false;
+    } else {
+        document.Form1["subject"].disabled = true;
+    }
+    window.onload = changeDisabled;
+</script>

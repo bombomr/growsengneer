@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <script type="text/javascript" src="../js/script_btn.js"></script>
+        <title>ファイルアップロード	</title>
+        <link rel="stylesheet" href="../css/stylesheet.css">
+    </head>
+    <body>
+        <form action="compUpload.php" method="post" enctype="multipart/form-data">
+            ファイルを選択してください：<br />
+                <input type="file" name="upfile" size="30" /><br />
+                    <br />
+                        <input type="submit" value="アップロード" />
+                        <input type="button" onClick="backPage(1)" value="前画面に戻る">
+        </form>
+    </body>
+</html>
