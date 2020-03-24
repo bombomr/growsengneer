@@ -36,7 +36,7 @@ header('X-FRAME-OPTIONS: SAMEORIGIN');
                     <div class="signupBanner">
                         <div class="signup_bar">
                             <div class="signup_box clearfix">
-                                <a role="button" class="_Test3 _Test8 signup_btn _Test9" href="../user/createAccount.php">
+                                <a role="button" class="_Test3 _Test8 signup_btn _Test9" href="../user/createUser.php">
                                     新規アカウント作成はこちら
                                 </a>
                             </div>
