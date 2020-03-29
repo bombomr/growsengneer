@@ -1,7 +1,8 @@
 <?php
+//セッション生成
 session_start();
 
-//セッションが無い場合
+//登録セッションが無い場合
 if(!isset($_SESSION['register'])) {
     //HTTPヘッダ送信
     header('Location: createUser.php');
@@ -10,20 +11,29 @@ if(!isset($_SESSION['register'])) {
 }
 
 try {
-    require('../db/db.php');
-    $dbh = db_connect();
-    //トランザクション開始
-    $dbh->beginTransaction();
-
+    //POST送信された場合の処理
     if(!empty($_POST)) {
+        //外部ファイル読み込み
+        require('../db/db.php');
+
+        //DB接続オブジェクトの呼び出し
+        $dbh = db_connect();
+
+        //トランザクション開始
+        $dbh->beginTransaction();
+
+        //登録のクエリ発行
         $statement = $dbh->prepare('INSERT INTO GE_D_CUSTOMER SET account_name=?, mail=?, password=?;');
+
+        //クエリ実行
         $statement->execute(array(
             $_SESSION['register']['account'],
             $_SESSION['register']['email'],
-            //パスワードのハッシュ化
-                password_hash($_SESSION['register']['password'],PASSWORD_DEFAULT)
+            //パスワードのハッシュ化処理
+            password_hash($_SESSION['register']['password'], PASSWORD_DEFAULT)
         ));
-        //コミット
+
+        //実行完了後、コミット
         $dbh->commit();
 
         //セッションの要素削除
@@ -31,14 +41,17 @@ try {
 
         //HTTPヘッダの送信
         header('Location: registerUser.html');
+
         //終了
         exit();
-    } 
+    }
 } catch(PDOException $e) {
     //エラーの場合、ロールバック
     $dbh->rollBack();
+
     //メッセージ内容の出力
     echo $e->getMessage();
+
     //終了
     die();
 }

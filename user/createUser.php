@@ -1,12 +1,13 @@
 <?php
 //セッション生成
 session_start();
+
 //外部ファイルの読み込み
 require('../db/db.php');
 
 //POST送信された場合の処理
 if(!empty($_POST)) {
-    //入力項目NULLチェック
+    //入力項目のNULLチェック
     if($_POST['account'] === '') {
         $error['account'] = 'blank';
     }
@@ -17,38 +18,44 @@ if(!empty($_POST)) {
         $error['password'] = 'blank';
     }
 
-    //入力項目文字数チェック
-    if(strlen($_POST['account']) > 10) {
+    //入力項目の文字数チェック
+    //10文字以下
+    //文字列の長さを取得
+    if(mb_strlen($_POST['account']) > 10) {
         $error['account'] = 'over';
     }
-    if(strlen($_POST['password']) > 15) {
-        $error['password'] = 'over';
-    }
-    if(strlen($_POST['password']) < 8) {
-        $error['password'] = 'min';
+    //半角英数字8文字以上15文字以下
+    //正規表現によるマッチング
+    if (!preg_match('/^[0-9a-zA-Z]{8,15}$/', $_POST["password"])) {
+        $error['password'] = 'maxmin';
     }
 
-    //エラーが無かった場合
+    //入力エラーが無かった場合の処理
+    //エラー変数に値が入っていないか
     if(!isset($error)){
-    //DB接続
+    //DB接続オブジェクトの呼び出し
     $dbh = db_connect();
-    //既に登録されたメールアドレスがないか
-    //SQLをセット
+
+    //入力したアドレスが既に登録済みでないか確認
+    //prepare利用し、SQLインジェクション対策
+    //クエリ発行
     $user_email = $dbh->prepare('SELECT customer_id FROM GE_D_CUSTOMER WHERE mail=?');
-    //SQLを実行
+
+    //クエリ実行
     $user_email->execute(array(
     $_POST['email']
     ));
+
     //結果の取得
     $user = $user_email->fetch();
 
-    //結果があった場合
+    //取得した結果があった場合（メアドがDBにあった）の処理
     if(!empty($user)){
-    //エラーメッセージ格納
         $error['email'] = 'registered';
     }
 }
-    //エラーない場合
+
+    //すべてのチェックでエラーがなかった場合の処理
     if (!isset($error)) {
         //セッションにPOST送信された値を格納
         $_SESSION['register'] = $_POST;
@@ -78,6 +85,8 @@ if(!empty($_POST)) {
 <input type="text" name="account" value="<?php echo htmlspecialchars($_POST['account'], ENT_QUOTES); ?>">
 <?php if($error['account'] == 'blank'): ?>
 <p class="error">アカウント名を入力してください。</p>
+<?php elseif($error['account'] === 'over'): ?>
+<p class="error">アカウント名は10文字以内で入力してください。</p>
 <?php endif ?>
 </dd>
 </dl>
@@ -100,10 +109,8 @@ if(!empty($_POST)) {
 <input type="password" name="password" value="">
 <?php if($error['password'] == 'blank'): ?>
 <p class="error">パスワードを入力してください。</p>
-<?php elseif($error['password'] === 'over'): ?>
-<p class="error">パスワードは15文字以内で入力してください。</p>
-<?php elseif($error['password'] === 'min'): ?>
-<p class="error">パスワードは8文字以上で入力してください。</p>
+<?php elseif($error['password'] === 'maxmin'): ?>
+<p class="error">パスワードは8文字以上15文字以内で入力してください。</p>
 <?php endif ?>
 </dd>
 </dl>

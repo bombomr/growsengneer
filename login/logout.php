@@ -1,19 +1,18 @@
 <?php
+//セッション生成
 session_start();
 
-header("Content-type; text/html; charse=utf-8");
+//HTTPヘッダを明示的に設定
+header("Content-type: text/html; charset=utf-8");
 
+//アカウント名が入っていない場合の処理
 if (!isset($_SESSION["account"])) {
+    //ログイン画面に戻る
     header("Location: ../index.php");
     exit();
 }
 
-$_SESSION = array();
-
-if (isset($_COOKIE["PHPSESSID"])) {
-    setcookie("PHPSESSID", '', time() - 1800, '/');
-}
-
+//セッション破棄
 session_destroy();
 
 echo "<p>ログアウトしました</p>";
@@ -25,18 +24,11 @@ echo "<p>ログアウトしました</p>";
         <script type="text/javascript" src="../js/script_btn.js"></script>
         <title>ログアウト画面</title>
         <meta charset="utf-8">
-        <link rel="stylesheet" href="../css/stylesheet.css">
     </head>
 
     <body>
-        <div id="header_redbar" data-referrer="header_redbar">
-            <div id="redBar">
-                <div class="_Test6">
-                    <div class="_Test5">
-                        <h1>タイトル</h1>
-                    </div>
-                </div>
-            </div>
+        <div>
+            <h1>タイトル</h1>
         </div>
         <form method="post">
             <input type="button" onClick="backPage(2)" value="ログイン画面に戻る">

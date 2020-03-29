@@ -1,16 +1,20 @@
 <?php
-function db_connect() {
-    //DB名とユーザー名、パスワードは任意。
-    $dsn = 'mysql:host=us-cdbr-iron-east-04.cleardb.net;dbname=heroku_1fde2782f9ecf81;charset=utf8';
-    $user = 'b16ffc7ca81c3c';
-    $password = 'd38db1c4';
+require_once('../private/ge_conf.php');
 
-    //PHPとDBサーバーの接続。
-    try {
-        $dbh = new PDO($dsn, $user, $password);
-        return $dbh;
-    } catch (PDOException $e) {
-        print('Error: '.$e->getMessage());
-        die();
-    }
+function db_connect() {
+	$db['user'] = DB_USER;
+	$db['host'] = DB_HOST;
+	$db['pass'] = DB_PASSWORD;
+	$db['dbname'] = DB_NAME;
+	$dsn = sprintf('mysql:host=%s;dbname=%s;charset=utf8', $db['host'], $db['dbname']);
+
+	try {
+		$dbh = new PDO($dsn, $db['user'], $db['pass'],
+			array(PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION));
+		return $dbh;
+	} catch (PDOException $e) {
+		print('Error: '.$e->getMessage());
+		die();
+	}
 }
+?>
