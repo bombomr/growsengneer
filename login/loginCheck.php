@@ -49,7 +49,7 @@ if (empty($_POST)) {
     //入力チェック
     if ($account == ''):
         $errors['account'] = "アカウントが入力されていません。";
-    elseif(mb_strlen($account)>10):
+    elseif(strlen($account)>10):
         $errors['account_length'] = "アカウントは10文字以内で入力して下さい。";
     endif;
     if ($password == ''):
