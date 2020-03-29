@@ -31,7 +31,7 @@ echo "<p>ようこそ、".htmlspecialchars($account, ENT_QUOTES)."さん</p>";
     <body>
         <!-- ヘッダー部 -->
         <h1>
-            <a class>
+            <a class="_Test7">
                 <u>タイトル</u>
             </a>
         <h1>
@@ -50,11 +50,12 @@ echo "<p>ようこそ、".htmlspecialchars($account, ENT_QUOTES)."さん</p>";
 
         <!-- メイン部 -->
         <div>
-            メインメニュー
+            管理者サイト
             <h3>
                 コンテンツ一覧
             </h3>
             <ol>
+                <li><a href="../contents/fileUpload.html">資料アップロード</a><br>
                 <li><a href="../contents/fileDownload.php">資料ダウンロード</a><br>
                 <li><a href="../contents/comment.php">日報確認</a><br>
             </ol>
