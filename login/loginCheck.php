@@ -1,30 +1,23 @@
 <?php
-//動作確認
-ini_set( 'display_errors', 1 );
-ini_set( 'error_reporting', E_ALL );
-
-
 //セッション生成
 session_start();
 
 //クリックジャッキング対策
-//クリック・ボタンなど偽装してクリックを誘い、意図しない動作をさせる
-//X-FRAME-OPTIONSは外部から埋め込まれたほかのウェブページを表示を除外する
-//フレーム内のページ表示を同一ドメイン内のみ許可
+//偽装ボタンなどによる意図しない動作を防ぐ。
+//外部埋め込み表示を除外し、ページ表示は同一ドメイン内のみ許可。
 header('X-FRAME-OPTIONS: SAMEORIGIN');
 
 //HTTPヘッダを明示的に設定
 header("Content-type: text/html; charset=utf-8");
 
-//セッションのトークンと、POST送信の際のトークンが一致しない場合
+//セッショントークンと、POST送信時のトークンが一致しない場合
 if ($_POST['token'] != $_SESSION['token']) {
-    echo "ERR403：管理者にお問い合わせください";
+    echo "アクセスエラー：管理者にお問い合わせください";
     exit();
 }
 
-//入力値のスペースを削除するメソッド
+//入力値のスペースを削除
 function spaceTrim($str) {
-    //正規表現で置換
     $str = preg_replace('/^[ 　]+/u', '', $str);
     $str = preg_replace('/[ 　]+$/u', '', $str);
     return $str;
@@ -49,7 +42,7 @@ if (empty($_POST)) {
     //入力チェック
     if ($account == ''):
         $errors['account'] = "アカウントが入力されていません。";
-    elseif(strlen($account)>10):
+    elseif(mb_strlen($account)>10):
         $errors['account_length'] = "アカウントは10文字以内で入力して下さい。";
     endif;
     if ($password == ''):
@@ -92,7 +85,7 @@ if (count($errors) === 0) {
                 $_SESSION['account'] = $account;
 
                 // 権限による画面遷移先の指定
-                if ($_SESSION['account'] == ROOT_USER) {
+                if ($_SESSION['account'] === ROOT_USER) {
                     //管理者ユーザー
                     header("Location: ../main/adminMainMenue.php");
                     exit();
@@ -118,26 +111,130 @@ if (count($errors) === 0) {
 
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>ログイン確認画面</title>
-        <meta charset="utf-8">
-    </head>
+  <head>
+    <title>ログインエラー</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+      /*=======================================================
+      全体のスタイル
+      =======================================================*/
+      * {
+        margin:0; padding:0; /* 全要素のmargin(要素の内側)・padding(要素の外側)をリセット */
+        line-height:1.5; /* 全要素の行の高さを1.5倍にする */
+        color:#333333;  /* 文字色 */
+      }
+      body {
+        font-family: 'Corbel';
+        background-color:#fafafa;  /* ページ全体の背景色 */
+        text-align:center;  /* IE6以下でセンタリングするための対策 */
+      }
+      /*=======================================================
+      ヘッダー部
+      =======================================================*/
+      /*  */
+      /* ヘッダーバー */
+      .header_bar{
+        position: fixed; /* 固定 */
+        width: 100%; /* 横幅 */
+        height: 60px; /* 高さ */
+        background-color: #545454; /* グレー */
+      }
+      /* ロゴ */
+      .gse_logo {
+        font-size: 30px; /* 文字の大きさ */
+        padding-top: 5px; /* 高さ */
+        padding-right: 950px; /* 右側の幅 */
+      }
+      /* ロゴの文字 */
+      .gse_logo p {
+        color:#fafafa;
+        font-family: 'Segoe Print';
+      }
+      /*=======================================================
+      コンテンツ部
+      =======================================================*/
+      .main_contents {
+        padding: 100px;
+        height: 350px;
+        background-color: #ffffff;
+      }
+      .login_form {
+        padding: 90px;
+        width: 30%;
+        height: 110px;
+        border: 2px solid #cccccc;
+        margin: 0 auto;
+      }
+      .login_form_header {
+        margin-top: -0.5em;
+        font-size: 25px; /* 文字の大きさ */
+      }
+      .login_frame {
+        width: 325px; /* 入力欄の位置（幅） */
+      }
+      .login_frame_ap {
+        width: 200px; /* 入力欄のサイズ */
+      }
+      .input_line {
+        line-height: 35px; /* 入力欄の行間 */
+      }
+      .login_button {
+        line-height: 80px; /* ボタンの位置 */
+      }
+      button.login_button {
+        font-size: 1.0em; /* 文字サイズを1.4emに指定 */
+        font-weight: bold; /* 文字の太さをboldに指定 */
+        background-color: #545454; /* ボタン色をグレーに指定 */
+        color: #fff; /* 文字色を白に指定 */
+        border-style: none; /* ボーダーをなくす */
+        line-height: 50px; /* ボタンの位置 */
+        width: 130px; /* ボタン幅 */
+        height: 45px; /* ボタン高さ */
+      }
+      /*======================================================
+      フッター部
+      =======================================================*/
+      .border {
+        border: 1.5px solid #cccccc;
+      }
+      .footer {
+        margin-top: 10px;
+        color: #ffffff;
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+      .copyright {
+        text-align: center;
+      }
+    </style>
+  </head>
 
-    <body>
-        <div>
-            <h1>
-                <a>ログイン</a>
-             </h1>
-        </div>
-        <h1>ログインエラー</h1>
-        <!-- エラーがあった場合、エラーの内容を出力 -->
-        <?php if(count($errors) > 0): ?>
-        <?php
-            foreach($errors as $value) {
-                echo "<p>".$value."<p>";
-            }
-        ?>
-        <input type="button" value="戻る" onClick="history.back()">
-        <?php endif; ?>
-    </body>
+  <body>
+    <!-- header -->
+    <header class="header_bar">
+      <div class="gse_logo">
+        <p>growsengneer</p>
+      </div>
+    </header>
+
+    <!-- contents -->
+    <main class="main_contents">
+      <h1 class="login_err">ログインに失敗しました。</h1><br><br>
+      <!-- エラーの内容を出力 -->
+      <?php if(count($errors) > 0): ?>
+      <?php
+        foreach($errors as $value) {
+            echo "<p>".$value."<p>";
+        }
+      ?><br>
+      <button class="login_button" onclick="history.back()">戻る</button>
+      <?php endif; ?>
+    </main>
+
+    <!-- footer -->
+    <div class="border"></div>
+    <footer class="footer">
+      <p class="copyright">growsengneer © 2020</p>
+    </footer>
+  </body>
 </html>
