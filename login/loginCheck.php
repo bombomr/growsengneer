@@ -1,7 +1,8 @@
 <?php
 //セッション生成
 session_start();
-
+ini_set( 'display_errors', 1 );
+ini_set( 'error_reporting', E_ALL );
 //クリックジャッキング対策
 //偽装ボタンなどによる意図しない動作を防ぐ。
 //外部埋め込み表示を除外し、ページ表示は同一ドメイン内のみ許可。
